@@ -6,6 +6,7 @@ import {Creators} from './Store/Actions/todo'
 
 import DeleteIcon from '@material-ui/icons/Delete';
 import DoneIcon from '@material-ui/icons/Done';
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 const Container = styled.div`
     display: flex;
@@ -47,7 +48,7 @@ const Task = styled.div`
   };
 `
 
-const App = ({generateUsers, stateList, addTask, deleteTask, markComplete}) => {
+const App = ({generateUsers, stateList, addTask, deleteTask, markComplete, isLoading}) => {
   const [task, setTask] = useState('');
   const inputHandler = (e) => {
     setTask(e.target.value);
@@ -67,6 +68,10 @@ const App = ({generateUsers, stateList, addTask, deleteTask, markComplete}) => {
       </RowFlowDiv>
       <ListDiv>
         {
+          isLoading 
+          ?
+          <CircularProgress />
+          :
           stateList.map((ele, key)=>{
             return <ItemCell key={key}>
                 <Task isCompleted={ele?.completed}>{ele?.task}</Task>
@@ -88,7 +93,8 @@ const App = ({generateUsers, stateList, addTask, deleteTask, markComplete}) => {
 }
 
 const mapStateToProps = state => ({
-  stateList: state.list
+  stateList: state.list,
+  isLoading: state.isLoading
 });
 
 const mapDispatchToProps = dispatch => ({
