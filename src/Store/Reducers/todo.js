@@ -42,11 +42,14 @@ export const addTaskSuccess = (state=INIT_STATE, action) => {
     {
         temp = [...state.list];
         temp.push({task: task, completed: false});
+        return {
+            ...state,
+            list: temp
+        }
     }
     return {
         ...state,
-        list: temp
-    }
+    }    
 }
 
 export const markCompleteTaskSuccess = (state=INIT_STATE, action) => {
