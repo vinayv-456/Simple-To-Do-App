@@ -2,7 +2,7 @@ import SearchBar from "./SearchBar";
 import styled from "styled-components";
 import { useState } from "react";
 import { connect } from 'react-redux';
-import {generateUsers, addTask, deleteTask, markComplete} from './Store/Actions/todo'
+import {Creators} from './Store/Actions/todo'
 
 import DeleteIcon from '@material-ui/icons/Delete';
 import DoneIcon from '@material-ui/icons/Done';
@@ -27,6 +27,7 @@ const AddTask = styled.button`
   padding: 10px;
   margin-top: 20px;
   width: 10%;
+  margin-left: 5px;
 `
 const ItemCell = styled.div`
   display: flex;
@@ -91,10 +92,10 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  generateUsers: () => dispatch(generateUsers()),
-  addTask: (task) => dispatch(addTask(task)),
-  deleteTask: (index) => dispatch(deleteTask(index)),
-  markComplete: (index) => dispatch(markComplete(index))
+  generateUsers: () => dispatch(Creators.addRandomNamesRequest()),
+  addTask: (task) => dispatch(Creators.addTaskSuccess(task)),
+  deleteTask: (index) => dispatch(Creators.deleteTaskSuccess(index)),
+  markComplete: (index) => dispatch(Creators.markCompleteTaskSuccess(index))
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(App);
