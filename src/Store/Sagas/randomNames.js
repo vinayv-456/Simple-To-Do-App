@@ -1,24 +1,24 @@
 import axios from "axios";
 import { fork, takeLatest, put, all } from "redux-saga/effects";
-import {ADD_RANDOM_NAMES_REQUEST, ADD_RANDOM_NAMES_SUCCESS, ADD_RANDOM_NAMES_FAILURE} from '../Actions/ActionTypes'
+import Types from '../Actions/ActionTypes'
 
 function* generateNames(){
     try{
         const data = yield axios.get("https://jsonplaceholder.typicode.com/users");
         console.log(data.data);
         yield put({
-            type: ADD_RANDOM_NAMES_SUCCESS,
+            type: Types.ADD_RANDOM_NAMES_SUCCESS,
             payload: data.data
         });
     }catch{
         yield put({
-            type: ADD_RANDOM_NAMES_FAILURE,
+            type: Types.ADD_RANDOM_NAMES_FAILURE,
         })
     }
 }
 
 export function* generateNameWatcher(){
-    yield takeLatest(ADD_RANDOM_NAMES_REQUEST, generateNames)
+    yield takeLatest(Types.ADD_RANDOM_NAMES_REQUEST, generateNames)
 } 
 
 export default function* rootSaga(){
