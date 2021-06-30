@@ -1,7 +1,7 @@
 import SearchBar from "./SearchBar";
 import styled from "styled-components";
 import { useState } from "react";
-import { connect } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import {Creators} from './Store/Actions/todo'
 
 import DeleteIcon from '@material-ui/icons/Delete';
@@ -48,8 +48,12 @@ const Task = styled.div`
   };
 `
 
-const App = ({generateUsers, stateList, addTask, deleteTask, markComplete, isLoading}) => {
+const App = () => {
   const [task, setTask] = useState('');
+  const stateList = useSelector((state)=>state.list);
+  const isLoading = useSelector((state)=>state.isLoading);
+  const dispatch = useDispatch();
+  
   const inputHandler = (e) => {
     setTask(e.target.value);
   }
@@ -60,11 +64,11 @@ const App = ({generateUsers, stateList, addTask, deleteTask, markComplete, isLoa
       <RowFlowDiv>
         <SearchBar inputHandler={inputHandler} task={task}/>
         <AddTask onClick={()=>{
-            addTask(task)
+            dispatch(Creators.addTaskSuccess(task))
             setTask('')    
           }
         }>Add Task</AddTask>
-        <AddTask onClick={generateUsers}>Generate names</AddTask>
+        <AddTask onClick={()=>dispatch(Creators.addRandomNamesRequest())}>Generate names</AddTask>
       </RowFlowDiv>
       <ListDiv>
         {
@@ -76,10 +80,10 @@ const App = ({generateUsers, stateList, addTask, deleteTask, markComplete, isLoa
             return <ItemCell key={key}>
                 <Task isCompleted={ele?.completed}>{ele?.task}</Task>
                 <RowFlowDiv>
-                  <div onClick={()=>deleteTask(key)}>
+                  <div onClick={()=>dispatch(Creators.deleteTaskSuccess(key))}>
                     <DeleteIcon/>
                   </div>
-                  <div onClick={()=>markComplete(key)}>
+                  <div onClick={()=>dispatch(Creators.markCompleteTaskSuccess(key))}>
                     <DoneIcon/>
                   </div>
                 </RowFlowDiv>
@@ -92,16 +96,4 @@ const App = ({generateUsers, stateList, addTask, deleteTask, markComplete, isLoa
   );
 }
 
-const mapStateToProps = state => ({
-  stateList: state.list,
-  isLoading: state.isLoading
-});
-
-const mapDispatchToProps = dispatch => ({
-  generateUsers: () => dispatch(Creators.addRandomNamesRequest()),
-  addTask: (task) => dispatch(Creators.addTaskSuccess(task)),
-  deleteTask: (index) => dispatch(Creators.deleteTaskSuccess(index)),
-  markComplete: (index) => dispatch(Creators.markCompleteTaskSuccess(index))
-})
-
-export default connect(mapStateToProps, mapDispatchToProps)(App);
+export default App;
